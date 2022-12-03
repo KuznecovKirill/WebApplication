@@ -5,3 +5,7 @@ app = Flask(__name__)
 
 def index(): #функция главной страницы
     return "Hello World"
+
+
+if __name__ == "__main__":
+    app.run(debug=True)
