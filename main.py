@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect
 from flask_sqlalchemy import SQLAlchemy
+from cloudipsp import Api, Checkout #система оплаты
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///Магазин.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -24,6 +25,17 @@ def mainMenu(): #функция главной страницы
 @app.route('/about')
 def about(): 
     return render_template("about.html")
+
+@app.route('/buy/<int:id>')
+def buy(id):
+    product = Product.query.get(id)
+    api = Api(merchant_id=1396424,
+          secret_key='test')
+    checkout = Checkout(api=api)
+    data = {"currency": "RUB", 
+    "amount": str(product.price) + "00"}
+    url = checkout.url(data).get('checkout_url') 
+    return redirect(url) #переадресация, чтобы была не ссылка, а сама страница   
 
 @app.route('/addProduct', methods=['POST','GET'])
 def addProduct():
