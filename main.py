@@ -10,6 +10,9 @@ class Product(db.Model):
     name = db.Column(db.String(50), nullable=False) # название
     price = db.Column(db.Integer, nullable=False) #цена
     #picture = db.Column(db.Text, unique=True, nullable=False) #картинка (возможно)
+    def __repr__(self):
+        return self.name
+
 with app.app_context():
     db.create_all()
 
