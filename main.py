@@ -9,7 +9,7 @@ class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True) #id товара
     name = db.Column(db.String(50), nullable=False) # название
     price = db.Column(db.Integer, nullable=False) #цена
-    #picture = db.Column(db.Text, unique=True, nullable=False) #картинка (возможно)
+    text = db.Column(db.Text, nullable=False) #описание товара
     def __repr__(self):
         return self.name
 
@@ -30,7 +30,8 @@ def addProduct():
     if request.method == "POST":
         nameProduct = request.form['name']
         price = request.form['price']
-        product = Product(name=nameProduct, price = price)
+        text = request.form['text']
+        product = Product(name=nameProduct, price = price, text=text)
         try:
             db.session.add(product)
             db.session.commit()
