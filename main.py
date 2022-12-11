@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, redirect
 from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///Магазин.db'
@@ -20,9 +20,20 @@ def mainMenu(): #функция главной страницы
 def about(): 
     return render_template("about.html")
 
-@app.route('/addProduct')
-def addProduct(): 
-    return render_template("addProduct.html")    
+@app.route('/addProduct', methods=['POST','GET'])
+def addProduct():
+    if request.method == "POST":
+        nameProduct = request.form['name']
+        price = request.form['price']
+        product = Product(name=nameProduct, price = price)
+        try:
+            db.session.add(product)
+            db.session.commit
+            return redirect('/') # возращает пользователя на главную страницу
+        except:
+            return "Error в вводе"
+    else:
+        return render_template("addProduct.html")    
 
 if __name__ == "__main__":
     app.run(debug=True)
