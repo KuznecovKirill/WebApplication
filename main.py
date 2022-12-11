@@ -10,11 +10,13 @@ class Product(db.Model):
     name = db.Column(db.String(50), nullable=False) # название
     price = db.Column(db.Integer, nullable=False) #цена
     #picture = db.Column(db.Text, unique=True, nullable=False) #картинка (возможно)
-
+with app.app_context():
+    db.create_all()
 
 @app.route('/')
 def mainMenu(): #функция главной страницы
-    return render_template("mainMenu.html")
+    products = Product.query.all()
+    return render_template("mainMenu.html", data=products)
 
 @app.route('/about')
 def about(): 
@@ -28,7 +30,7 @@ def addProduct():
         product = Product(name=nameProduct, price = price)
         try:
             db.session.add(product)
-            db.session.commit
+            db.session.commit()
             return redirect('/') # возращает пользователя на главную страницу
         except:
             return "Error в вводе"
